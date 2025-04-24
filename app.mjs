@@ -1,10 +1,20 @@
 import express from "express";
 import postsRouter from "./router/post.mjs";
 import authRouter from "./router/auth.mjs";
+import session from "express-session";
 
 const app = express();
 
 app.use(express.json());
+
+app.use(
+  session({
+    secret: "!@#$%%^&*()",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false },
+  })
+);
 
 app.use("/posts", postsRouter);
 app.use("/auth", authRouter);

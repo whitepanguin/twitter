@@ -15,5 +15,8 @@ router.post("/signup", authController.signup);
 router.post("/login", authController.login);
 
 // 로그인 유지
+router.get("/me", authController.me);
+
+router.get("/logout", authController.logout);
 
 export default router;
