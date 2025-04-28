@@ -42,8 +42,8 @@ export async function updatePost(req, res, next) {
 // 포스트 삭제하는 함수
 export async function deletePost(req, res, next) {
   const id = req.params.id;
-  const data = await postRepository.remove(id);
-  res.status(201).json(data);
-  //await postRepository.remove(id);
-  //res.sendStatus(204)
+  // const data = await postRepository.remove(id);
+  // res.status(201).json(data);
+  await postRepository.remove(id);
+  res.sendStatus(204);
 }
