@@ -90,3 +90,11 @@ export async function login(userid, password) {
     return { message: "UserId Incorrect" };
   }
 }
+
+export async function findByUserid(userid) {
+  return users.find((user) => user.userid === userid);
+}
+
+export async function findByid(id) {
+  return users.find((user) => user.id === id);
+}
