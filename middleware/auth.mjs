@@ -15,7 +15,7 @@
 
 import jwt from "jsonwebtoken";
 import * as authRepository from "../data/auth.mjs";
-import config from "../config.mjs";
+import { config } from "../config.mjs";
 
 const AUTH_ERROR = { message: "인증 에러" };
 
