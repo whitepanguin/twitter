@@ -22,8 +22,9 @@ export async function getPostId(req, res, next) {
 
 // 포스트 생성하는 함수
 export async function createPost(req, res, next) {
-  const { userid, name, text } = req.body;
-  const posts = await postRepository.create(userid, name, text);
+  const { text } = req.body;
+  console.log("req.useridx: ", req.useridx);
+  const posts = await postRepository.create(text, req.useridx);
   res.status(201).json(posts);
 }
 
@@ -37,6 +38,7 @@ export async function updatePost(req, res, next) {
   } else {
     res.status(404).json({ message: `${id}의 포스트가 없습니다.` });
   }
+  next();
 }
 
 // 포스트 삭제하는 함수
@@ -44,6 +46,13 @@ export async function deletePost(req, res, next) {
   const id = req.params.id;
   // const data = await postRepository.remove(id);
   // res.status(201).json(data);
+  const post = await postRepository.getById(id);
+  if (!post) {
+    return res.status(404).json({ message: `${id}의 포스트가 없습니다` });
+  }
+  if (post.useridx !== req.useridx) {
+    return res.sendStatus(403);
+  }
   await postRepository.remove(id);
   res.sendStatus(204);
 }
