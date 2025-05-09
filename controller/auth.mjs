@@ -13,7 +13,7 @@ async function createJwtToken(id) {
 
 // 회원가입 put create
 export async function signup(req, res, next) {
-  const { userid, password, name, email } = req.body;
+  const { userid, password, name, email, url } = req.body;
   // 회원 중복 체크
   const found = await authRepository.findByUserid(userid);
   if (found) {
@@ -22,7 +22,13 @@ export async function signup(req, res, next) {
 
   const hashed = bcrypt.hashSync(password, bcryptSaltRounds);
 
-  const users = await authRepository.createUser(userid, hashed, name, email);
+  const users = await authRepository.createUser({
+    userid,
+    password: hashed,
+    name,
+    email,
+    url,
+  });
 
   const token = await createJwtToken(users.id);
   console.log(token);

@@ -1,80 +1,12 @@
-let users = [
-  {
-    id: "1",
-    userid: "apple",
-    password: "1111",
-    name: "김사과",
-    email: "apple@apple.com",
-    url: "https://randomuser.me/api/portraits/women/32.jpg",
-  },
-  {
-    id: "2",
-    userid: "banana",
-    password: "2222",
-    name: "반하나",
-    email: "banana@banana.com",
-    url: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    id: "3",
-    userid: "orange",
-    password: "3333",
-    name: "오렌지",
-    email: "orange@orange.com",
-    url: "https://randomuser.me/api/portraits/men/11.jpg",
-  },
-  {
-    id: "4",
-    userid: "berry",
-    password: "4444",
-    name: "배애리",
-    email: "orange@orange.com",
-    url: "https://randomuser.me/api/portraits/women/52.jpg",
-  },
-  {
-    id: "5",
-    userid: "melon",
-    password: "5555",
-    name: "이메론",
-    email: "orange@orange.com",
-    url: "https://randomuser.me/api/portraits/men/29.jpg",
-  },
-];
-/*
-export async function createUser(userid,password,name,email){
-  const user = {
-    id:Date.now().toString(),
-      userid,
-      password,
-      name,
-      email,
-    };
-    users = [user,...users]
-    return users;
-}
-
-export async function login(userid, password){
-  const user = users.find((user)=> user.userid == userid && user.password == password)
-  return user;
-}
-*/
+import MongoDb from "mongodb";
+import { getUsers } from "../db/database.mjs";
+const ObjectId = MongoDb.ObjectId;
 
 // 회원가입 put create
-export async function createUser(userid, password, name, email) {
-  const finduser = users.find((user) => user.userid === userid);
-  if (!finduser) {
-    const user = {
-      id: Date.now().toString(),
-      userid,
-      password,
-      name,
-      email,
-    };
-    users = [user, ...users];
-    return users;
-  } else {
-    return { message: "이미 있는 계정입니다" };
-  }
+export async function createUser(user) {
+  return getUsers()
+    .insertOne(user)
+    .then((result) => result.insertedId.toString());
 }
 
 // 로그인 get
@@ -92,9 +24,17 @@ export async function login(userid, password) {
 }
 
 export async function findByUserid(userid) {
-  return users.find((user) => user.userid === userid);
+  return getUsers().find({ userid }).next().then(mapOptionalUser);
 }
 
 export async function findByid(id) {
-  return users.find((user) => user.id === id);
+  return getUsers()
+    .find({ _id: new ObjectId(id) })
+    .next()
+    .then(mapOptionalUser);
+}
+
+// id라는 항목을 새롭게 만들어서 user_id의 정보를 복사해서 넣어주는 함수다
+function mapOptionalUser(user) {
+  return user ? { ...user, id: user._id.toString() } : user;
 }
