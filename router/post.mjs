@@ -39,6 +39,6 @@ router.put("/:id", validatePost, isAuth, postController.updatePost);
 // 포스트 삭제
 // DELETE
 // http://127.0.0.1:8080/posts/:id
-router.delete("/:id", validatePost, isAuth, postController.deletePost);
+router.delete("/:id", isAuth, postController.deletePost);
 
 export default router;

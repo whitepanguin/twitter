@@ -2,6 +2,7 @@ import express from "express";
 import postsRouter from "./router/post.mjs";
 import authRouter from "./router/auth.mjs";
 import { config } from "./config.mjs";
+import { connectDB } from "./db/database.mjs";
 
 const app = express();
 
@@ -15,6 +16,10 @@ app.use((req, res, next) => {
   res.sendStatus(404);
 });
 
-app.listen(config.host.port, () => {
-  console.log("서버 실행 중");
-});
+connectDB()
+  .then(() => {
+    app.listen(config.host.port, () => {
+      console.log("서버 실행 중");
+    });
+  })
+  .catch(console.error);
