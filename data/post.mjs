@@ -1,5 +1,5 @@
 import { getPosts } from "../db/database.mjs";
-import MongoDb, { ObjectId, ReturnDocument } from "mongodb";
+import MongoDb, { ObjectId } from "mongodb";
 import * as UserRepository from "./auth.mjs";
 const ObjectID = MongoDb.ObjectId;
 
